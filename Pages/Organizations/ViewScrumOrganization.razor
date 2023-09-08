@@ -1,0 +1,56 @@
+@page "/viewScrumOrganizations"
+@using ScrumTeamUi.Services
+@using ScrumTeamUi.Models
+@inject ScrumOrganizationService ScrumOrganizationService
+@inject NavigationManager Navigation
+
+<PageTitle>Scrum Organization</PageTitle>
+
+<h1>Scrum Organization</h1>
+
+@if (organizations is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var organization in organizations)
+        {
+            <tr>
+                <td>@organization.Id</td>
+                <td>@organization.Name</td>
+                <td>
+                    <a href="/editScrumOrganization/@organization.Id">Edit</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<button @onclick="AddScrumOrganizationClick">Add Scrum Organization</button>
+
+@code {
+    private IReadOnlyCollection<Organization> organizations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        organizations = await this.ScrumOrganizationService.GetOrganizations();
+    }
+
+    private void AddScrumOrganizationClick()
+    {
+        Navigation.NavigateTo("/addScrumOrganization");
+    }
+}

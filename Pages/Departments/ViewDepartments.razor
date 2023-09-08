@@ -1,0 +1,54 @@
+@page "/viewDepartments"
+@using ScrumTeamUi.Models
+@using ScrumTeamUi.Services
+@* @implements IDisposable *@
+@inject ILogger<ViewDepartments> Logger
+@inject NavigationManager Navigation
+@inject DepartmentService DepartmentService
+
+<PageTitle>Departments</PageTitle>
+
+<h1>Departments</h1>
+
+@if (departments is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var department in departments)
+        {
+            <tr>
+                <td>@department.Id</td>
+                <td>@department.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<button @onclick="AddDepartmentClick">Add Department</button>
+
+@code {
+    private IReadOnlyCollection<Department> departments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        departments = await this.DepartmentService.GetDepartments();
+    }
+
+    private void AddDepartmentClick()
+    {
+        Navigation.NavigateTo("/addDepartment");
+    }
+}

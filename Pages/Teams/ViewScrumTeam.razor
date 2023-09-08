@@ -1,0 +1,53 @@
+@page "/viewScrumTeam"
+@using ScrumTeamUi.Models
+@using ScrumTeamUi.Services
+@inject ScrumTeamService ScrumTeamService
+@inject NavigationManager Navigation
+
+<PageTitle>Scrum Team</PageTitle>
+
+<h1>Scrum Team</h1>
+
+@if (scrumTeams is null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var scrumTeam in scrumTeams)
+        {
+            <tr>
+                <td>@scrumTeam.Id</td>
+                <td>@scrumTeam.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<button @onclick="AddScrumTeamClick">Add Team Member</button>
+
+@code {
+    private IReadOnlyCollection<ScrumTeam> scrumTeams;
+
+    protected override async Task OnInitializedAsync()
+    {
+        scrumTeams = await this.ScrumTeamService.GetScrumTeams();
+    }
+
+    private void AddScrumTeamClick()
+    {
+        Navigation.NavigateTo("/addScrumTeam");
+    }
+    
+}

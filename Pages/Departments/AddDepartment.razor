@@ -1,0 +1,48 @@
+@page "/addDepartment"
+@using ScrumTeamUi.Models
+@* @using ScrumTeamUi.Services *@
+@inject ILogger<AddDepartment> Logger
+@inject NavigationManager Navigation
+
+<PageTitle>Add Department</PageTitle>
+
+<h1>Add Department</h1>
+
+<EditForm Model=@_newDepartment OnSubmit=@FormSubmitted>
+  <div class="form-group">
+    <label for="Name">Name</label>
+    <InputText @bind-Value=_newDepartment.Name class="form-control" id="Name" />
+  </div>
+  @* <div class="form-group"> *@
+  @*   <label for="Age">Age</label> *@
+  @*   <InputNumber @bind-Value=Person.Age class="form-control" id="Age" /> *@
+  @* </div> *@
+  <input type="submit" class="btn btn-primary" value="Save"/>
+</EditForm>
+
+
+@code {
+    private Department _newDepartment = null!;
+    
+    protected override void OnInitialized()
+    {
+        _newDepartment = new Department
+        {
+            Id = new Guid()
+        };
+        base.OnInitialized();
+        Navigation.LocationChanged += NavigationOnLocationChanged;
+    }
+
+    private void NavigationOnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+    }
+
+    private void FormSubmitted(EditContext editContext)
+    {
+        bool formIsValid = editContext.Validate();
+        Console.WriteLine($"Form Validation state is: {formIsValid}");
+        Logger.LogDebug($"Form Validation state is: {formIsValid}");
+        Navigation.NavigateTo("/viewDepartments");
+    }
+}
